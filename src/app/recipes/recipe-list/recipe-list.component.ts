@@ -7,7 +7,18 @@ import { Recipe } from '../recipe.model';
   styleUrls: ['./recipe-list.component.css'],
 })
 export class RecipeListComponent implements OnInit {
-  recipes: Array<Recipe> = [];
+  recipes: Recipe[] = [
+    new Recipe(
+      'Cheese',
+      'Delicious',
+      'https://cdn.pixabay.com/photo/2016/03/05/19/24/cheese-1238395_960_720.jpg',
+    ),
+    new Recipe(
+      'Cheese',
+      'Delicious',
+      'https://cdn.pixabay.com/photo/2016/03/05/19/24/cheese-1238395_960_720.jpg',
+    ),
+  ];
   constructor() {}
 
   ngOnInit() {}
