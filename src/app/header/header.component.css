@@ -1,0 +1,6 @@
+.navbar-nav > li > a {
+  cursor: pointer;
+}
+.navbar-nav > li > a:hover {
+  text-decoration: underline;
+}
