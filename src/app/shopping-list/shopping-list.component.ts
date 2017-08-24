@@ -1,38 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from './shopping-list.service';
 
-const isSameIngredient = a => b => a.name === b.name;
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css'],
 })
 export class ShoppingListComponent implements OnInit {
-  ingredients: Ingredient[] = [new Ingredient('Cheese', 3)];
+  list: Ingredient[] = [];
 
-  constructor() {}
+  constructor(private shoppingListService: ShoppingListService) {}
 
-  ngOnInit() {}
-
-  onAddToShoppingList(ingredient: Ingredient) {
-    if (this.ingredientIsInList(ingredient)) {
-      return this.mergeIngredients(ingredient);
-    }
-    this.ingredients.push(ingredient);
-    this.sortIngredients();
-  }
-
-  mergeIngredients(ingredient: Ingredient) {
-    this.ingredients.find(isSameIngredient(ingredient)).amount +=
-      ingredient.amount;
-  }
-
-  ingredientIsInList(ingredient: Ingredient) {
-    return this.ingredients.some(isSameIngredient(ingredient));
-  }
-  sortIngredients() {
-    this.ingredients.sort(
-      (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1),
-    );
+  ngOnInit() {
+    this.list = this.shoppingListService.getList();
+    this.shoppingListService.listChanged.subscribe(newList => {
+      this.list = newList;
+    });
   }
 }

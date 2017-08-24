@@ -1,12 +1,6 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Ingredient } from '../../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list.service';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -14,22 +8,14 @@ import { Ingredient } from '../../shared/ingredient.model';
   styleUrls: ['./shopping-edit.component.css'],
 })
 export class ShoppingListEditComponent implements OnInit {
-  @ViewChild('nameInput') nameInput: ElementRef;
-  @ViewChild('amountInput') amountInput: ElementRef;
-  @Output() addToShoppingList = new EventEmitter<Ingredient>();
-  constructor() {}
+  constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit() {}
 
-  onAdd(e: Event) {
+  onAdd(e: Event, nameInput: HTMLInputElement, amountInput: HTMLInputElement) {
     e.preventDefault();
-    const name = this.nameInput.nativeElement.value;
-    const amount = parseInt(this.amountInput.nativeElement.value, 10);
-
-    const nameIsLongEnough = name.trim().length > 2;
-    const amountIsLargerThan0 = !isNaN(amount) && amount > 0;
-    if (nameIsLongEnough && amountIsLargerThan0) {
-      this.addToShoppingList.emit(new Ingredient(name, amount));
-    }
+    const name = nameInput.value;
+    const amount = parseInt(amountInput.value, 10);
+    this.shoppingListService.addToList(new Ingredient(name, amount));
   }
 }
