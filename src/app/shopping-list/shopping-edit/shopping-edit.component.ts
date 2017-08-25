@@ -16,6 +16,9 @@ export class ShoppingListEditComponent implements OnInit {
     e.preventDefault();
     const name = nameInput.value;
     const amount = parseInt(amountInput.value, 10);
-    this.shoppingListService.addToList(new Ingredient(name, amount));
+    const ingredient = new Ingredient(name, amount);
+    if (Ingredient.isValid(ingredient)) {
+      this.shoppingListService.addToList(ingredient);
+    }
   }
 }
