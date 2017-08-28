@@ -12,7 +12,8 @@ export class RecipeItemComponent {
 
   constructor(private recipeService: RecipeService) {}
 
-  onRecipeItemClick() {
+  onRecipeItemClick(e: Event) {
+    e.preventDefault();
     this.recipeService.recipeSelected.emit(this.recipe);
   }
 }
