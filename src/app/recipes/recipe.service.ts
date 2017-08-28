@@ -30,23 +30,70 @@ export class RecipeService {
   ];
   listChanged = new EventEmitter<Recipe[]>();
 
-  addRecipe(recipe: Recipe) {
+  /**
+   * Add a recipe to the list
+   * @param {Recipe} recipe
+   * @returns {number} id - the new id
+   */
+  addRecipe(recipe: Recipe): number {
     this.list.push(recipe);
-    this.sortRecipes();
     this.listChanged.emit(this.getRecipes());
+    return this.list.length - 1;
   }
 
-  private sortRecipes() {
-    this.list.sort(
-      (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1),
-    );
+  /**
+   * Edit a recipe in the list
+   * @param {number} id
+   * @param {Recipe} recipe
+   * @returns {boolean} wasEdited
+   */
+  editRecipe(id: number, recipe: Recipe): boolean {
+    if (!this.recipeIdExists(id)) {
+      return false;
+    }
+    this.list[id] = recipe;
+    this.listChanged.emit(this.getRecipes());
+    return true;
   }
 
+  /**
+   * Delete a recipe from the list, confirming the delete first
+   * @param {number} id
+   * @returns {boolean} wasDeleted
+   */
+  deleteRecipe(id: number): boolean {
+    if (
+      !this.recipeIdExists(id) ||
+      !confirm('You sure you want to delete it?')
+    ) {
+      return false;
+    }
+    this.list.splice(id, 1);
+    this.listChanged.emit(this.getRecipes());
+    return true;
+  }
+
+  /**
+   * Get a copy of all recipes from the list
+   * @returns {Recipe[]}
+   */
   getRecipes(): Recipe[] {
     return [...this.list];
   }
 
+  /**
+   * Get a recipe from the list by id
+   * @param {number} id
+   * @returns {Recipe}
+   */
   getRecipe(id: number): Recipe {
+    if (!this.recipeIdExists(id)) {
+      return null;
+    }
     return this.list[id];
+  }
+
+  private recipeIdExists(id: number) {
+    return Number.isInteger(id) && this.list.length > id && id >= 0;
   }
 }
