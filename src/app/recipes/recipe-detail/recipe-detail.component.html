@@ -24,8 +24,8 @@
       </button>
       <ul class="dropdown-menu">
         <li><a style="cursor: pointer" (click)="onAddToList()">Add to shopping list</a></li>
-        <li><a style="cursor: pointer">Edit Recipe</a></li>
-        <li><a style="cursor: pointer">Delete Recipe</a></li>
+        <li><a [routerLink]="['edit']">Edit Recipe</a></li>
+        <li><a style="cursor: pointer" (click)="onDelete()">Delete Recipe</a></li>
       </ul>
     </div>
   </div>

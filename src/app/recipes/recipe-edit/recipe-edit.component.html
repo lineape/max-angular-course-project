@@ -1,0 +1,38 @@
+<form class="form" (submit)="onFormSubmit($event)">
+  <div class="form-group">
+    <label for="recipeName">Recipe Name</label>
+    <input
+      id="recipeName"
+      name="recipeName"
+      class="form-control"
+      [(ngModel)]="recipeName"
+    >
+  </div>
+  <div class="form-group">
+    <label for="recipeDescription">Recipe Description</label>
+    <textarea
+      id="recipeDescription"
+      name="recipeDescription"
+      type="text"
+      class="form-control"
+      [(ngModel)]="recipeDescription"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="recipeImagePath">Recipe Image Path</label>
+    <input
+      id="recipeImagePath"
+      name="recipeImagePath"
+      class="form-control"
+      [(ngModel)]="recipeImagePath"
+    >
+  </div>
+  <button class="btn btn-primary">
+    {{ editMode ? 'Edit recipe' : 'Add new recipe' }}
+  </button>
+  <button
+    *ngIf="editMode"
+    class="btn btn-danger"
+    (click)="deleteRecipe($event)"
+  >Delete recipe</button>
+</form>
