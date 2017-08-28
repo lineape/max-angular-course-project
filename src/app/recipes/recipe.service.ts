@@ -28,7 +28,6 @@ export class RecipeService {
       ],
     ),
   ];
-  recipeSelected = new EventEmitter<Recipe>();
   listChanged = new EventEmitter<Recipe[]>();
 
   addRecipe(recipe: Recipe) {
@@ -45,5 +44,9 @@ export class RecipeService {
 
   getRecipes(): Recipe[] {
     return [...this.list];
+  }
+
+  getRecipe(id: number): Recipe {
+    return this.list[id];
   }
 }
