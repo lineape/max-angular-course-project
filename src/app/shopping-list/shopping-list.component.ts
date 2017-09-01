@@ -38,6 +38,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
   }
 
+  onDeleteList() {
+    this.shoppingListService.deleteList();
+  }
+
   ngOnDestroy() {
     this.listSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();

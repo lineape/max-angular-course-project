@@ -3,6 +3,7 @@
     <app-shopping-edit></app-shopping-edit>
     <hr>
     <div *ngIf="list.length; else listEmpty">
+      <button class="btn btn-danger" (click)="onDeleteList()">Delete List</button>
       <ul class="list-group">
         <li
           class="list-group-item"

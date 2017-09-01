@@ -41,7 +41,7 @@ export class ShoppingListService {
     return [...this.list];
   }
 
-  clearList(): boolean {
+  deleteList(): boolean {
     if (confirm('Sure you want to clear the list? This cannot be undone')) {
       this.selectedChanged.next(null);
       this.list = [];
