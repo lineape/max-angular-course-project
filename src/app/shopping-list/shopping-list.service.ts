@@ -7,16 +7,24 @@ export class ShoppingListService {
   selectedChanged = new Subject<Ingredient>();
   listChanged = new Subject<Ingredient[]>();
 
-  addToList(ingredient: Ingredient | Ingredient[]) {
+  addIngredient(ingredient: Ingredient | Ingredient[]) {
     const ingredients = Array.isArray(ingredient) ? ingredient : [ingredient];
     ingredients.forEach(x => this.addIngredientToList(x));
     this.list = this.list.filter(x => x.amount > 0);
     this.listChanged.next(this.getList());
   }
 
-  replaceIngredient(oldIngredient: Ingredient, newIngredient: Ingredient) {
+  editIngredient(oldIngredient: Ingredient, newIngredient: Ingredient) {
     this.list = this.list.filter(x => x.name !== oldIngredient.name);
-    this.addToList(newIngredient);
+    this.addIngredient(newIngredient);
+  }
+
+  addOrEditIngredient(oldIngredient: Ingredient, newIngredient: Ingredient){
+    if (oldIngredient instanceof Ingredient){
+      this.editIngredient(oldIngredient, newIngredient);
+    } else {
+      this.addIngredient(newIngredient);
+    }
   }
 
   private addIngredientToList(ingredient: Ingredient) {
