@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Ingredient } from '../../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -17,11 +17,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit() {
-    const { required, minLength, min } = Validators;
-    this.form = new FormGroup({
-      name: new FormControl(null, [required, minLength(2)]),
-      amount: new FormControl(1, [required, min(1)]),
-    });
+    this.form = Ingredient.getForm();
     this.selectedSubscription = this.shoppingListService.selectedChanged.subscribe(
       this.onSelectedChanged.bind(this),
     );
