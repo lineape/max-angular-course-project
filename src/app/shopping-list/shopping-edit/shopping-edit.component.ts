@@ -24,11 +24,10 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   onSelectedChanged(ingredient: Ingredient) {
-    if (ingredient) {
-      this.selected = ingredient;
+    this.selected = ingredient;
+    if (this.selected) {
       this.form.reset({ name: ingredient.name, amount: ingredient.amount });
     } else {
-      this.selected = null;
       this.resetForm();
     }
   }
