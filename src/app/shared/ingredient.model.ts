@@ -1,10 +1,7 @@
 export class Ingredient {
   constructor(public name: string, public amount: number) {
     this.name = name.trim();
-  }
-
-  static isValid(ingredient: Ingredient) {
-    return ingredient.name.trim().length > 0 && !isNaN(ingredient.amount);
+    this.amount = Math.floor(amount);
   }
 
   static sortNameAsc(o1: Ingredient, o2: Ingredient) {

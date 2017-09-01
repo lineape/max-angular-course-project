@@ -9,9 +9,10 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./shopping-list.component.css'],
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  selected: Ingredient = null;
   list: Ingredient[] = [];
+  selected: Ingredient = null;
   private listSubscription: Subscription;
+  private selectedSubscription: Subscription;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
@@ -22,17 +23,24 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         this.list = newList;
       },
     );
+    this.selectedSubscription = this.shoppingListService.selectedChanged.subscribe(
+      (ingredient: Ingredient) => {
+        this.selected = ingredient;
+      },
+    );
   }
 
   onIngredientClick(ingredient: Ingredient) {
     if (this.selected === ingredient) {
-      this.selected = null;
+      this.shoppingListService.selectedChanged.next(null);
     } else {
-      this.selected = ingredient;
+      this.shoppingListService.selectedChanged.next(ingredient);
     }
   }
 
   ngOnDestroy() {
     this.listSubscription.unsubscribe();
+    this.selectedSubscription.unsubscribe();
+    this.shoppingListService.selectedChanged.next(null);
   }
 }
