@@ -1,6 +1,6 @@
 import { Recipe } from './recipe.model';
-import { EventEmitter } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
+import { Subject } from 'rxjs/Subject';
 
 export class RecipeService {
   private list: Recipe[] = [
@@ -28,7 +28,7 @@ export class RecipeService {
       ],
     ),
   ];
-  listChanged = new EventEmitter<Recipe[]>();
+  listChanged = new Subject<Recipe[]>();
 
   /**
    * Add a recipe to the list
@@ -37,7 +37,7 @@ export class RecipeService {
    */
   addRecipe(recipe: Recipe): number {
     this.list.push(recipe);
-    this.listChanged.emit(this.getRecipes());
+    this.listChanged.next(this.getRecipes());
     return this.list.length - 1;
   }
 
@@ -52,7 +52,7 @@ export class RecipeService {
       return false;
     }
     this.list[id] = recipe;
-    this.listChanged.emit(this.getRecipes());
+    this.listChanged.next(this.getRecipes());
     return true;
   }
 
@@ -69,7 +69,7 @@ export class RecipeService {
       return false;
     }
     this.list.splice(id, 1);
-    this.listChanged.emit(this.getRecipes());
+    this.listChanged.next(this.getRecipes());
     return true;
   }
 

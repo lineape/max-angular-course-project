@@ -8,6 +8,8 @@
         class="list-group-item"
         style="cursor: pointer"
         *ngFor="let ingredient of list"
+        [ngClass]="{active: ingredient === selected }"
+        (click)="onIngredientClick(ingredient)"
       >
         {{ingredient.name}}
         (x{{ingredient.amount}})
