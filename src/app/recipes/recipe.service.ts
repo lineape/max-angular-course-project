@@ -33,7 +33,7 @@ export class RecipeService {
   /**
    * Add a recipe to the list
    * @param {Recipe} recipe
-   * @returns {number} id - the new id
+   * @returns {number} id
    */
   addRecipe(recipe: Recipe): number {
     this.list.push(recipe);
@@ -43,34 +43,43 @@ export class RecipeService {
 
   /**
    * Edit a recipe in the list
-   * @param {number} id
-   * @param {Recipe} recipe
-   * @returns {boolean} wasEdited
+   * @param {Recipe} oldRecipe
+   * @param {Recipe} newRecipe
+   * @returns {number} id
    */
-  editRecipe(id: number, recipe: Recipe): boolean {
-    if (!this.recipeIdExists(id)) {
-      return false;
-    }
-    this.list[id] = recipe;
+  editRecipe(oldRecipe: Recipe, newRecipe: Recipe): number {
+    const index = this.list.findIndex(x => x.name === oldRecipe.name);
+    this.list[index] = newRecipe;
     this.listChanged.next(this.getRecipes());
-    return true;
+    return index;
+  }
+
+  /**
+   * Add or update a recipe, depending on if the first argument is null
+   * @param {Recipe} oldRecipe
+   * @param {Recipe} newRecipe
+   * @returns {number} id
+   */
+  addOrEditRecipe(oldRecipe: Recipe, newRecipe: Recipe): number {
+    if (oldRecipe instanceof Recipe) {
+      return this.editRecipe(oldRecipe, newRecipe);
+    } else {
+      return this.addRecipe(newRecipe);
+    }
   }
 
   /**
    * Delete a recipe from the list, confirming the delete first
-   * @param {number} id
+   * @param {Recipe} recipe
    * @returns {boolean} wasDeleted
    */
-  deleteRecipe(id: number): boolean {
-    if (
-      !this.recipeIdExists(id) ||
-      !confirm('You sure you want to delete it?')
-    ) {
-      return false;
+  deleteRecipe(recipe: Recipe): boolean {
+    if (confirm('You sure you want to delete it?')) {
+      this.list = this.list.filter(x => x.name !== recipe.name);
+      this.listChanged.next(this.getRecipes());
+      return true;
     }
-    this.list.splice(id, 1);
-    this.listChanged.next(this.getRecipes());
-    return true;
+    return false;
   }
 
   /**
@@ -87,13 +96,6 @@ export class RecipeService {
    * @returns {Recipe}
    */
   getRecipe(id: number): Recipe {
-    if (!this.recipeIdExists(id)) {
-      return null;
-    }
-    return this.list[id];
-  }
-
-  private recipeIdExists(id: number) {
-    return Number.isInteger(id) && this.list.length > id && id >= 0;
+    return this.list[id] ? this.list[id] : null;
   }
 }
