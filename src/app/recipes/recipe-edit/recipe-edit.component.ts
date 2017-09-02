@@ -42,12 +42,9 @@ export class RecipeEditComponent implements OnInit {
   }
 
   private addRecipeToForm() {
-    const { name, description, imagePath } = this.recipe;
+    const { name, description, imagePath, ingredients } = this.recipe;
     this.form.reset({ name, description, imagePath });
-    this.recipe.ingredients.forEach((x, i) => {
-      this.ingredients.push(Ingredient.getForm());
-      this.ingredients.at(i).setValue({ name: x.name, amount: x.amount });
-    });
+    ingredients.forEach(x => this.ingredients.push(Ingredient.getForm(x)));
   }
 
   onAddIngredient() {

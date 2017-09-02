@@ -10,11 +10,13 @@ export class Ingredient {
     return o1.name.toLowerCase() > o2.name.toLowerCase() ? 1 : -1;
   }
 
-  static getForm() {
+  static getForm(
+    ingredient: { name: string; amount: number } = { name: null, amount: 1 },
+  ) {
     const { required, min, minLength } = Validators;
     return new FormGroup({
-      name: new FormControl(null, [required, minLength(2)]),
-      amount: new FormControl(1, [required, min(1)]),
+      name: new FormControl(ingredient.name, [required, minLength(2)]),
+      amount: new FormControl(ingredient.amount, [required, min(1)]),
     });
   }
 
