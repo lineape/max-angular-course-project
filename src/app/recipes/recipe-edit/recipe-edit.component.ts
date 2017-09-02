@@ -3,7 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
 import { Ingredient } from '../../shared/ingredient.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -13,6 +13,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class RecipeEditComponent implements OnInit {
   recipe: Recipe;
   form: FormGroup;
+  ingredients: FormArray;
+  ingredientControls: FormGroup[];
 
   constructor(
     private route: ActivatedRoute,
@@ -21,34 +23,46 @@ export class RecipeEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      description: new FormControl(null, [Validators.required]),
-      imagePath: new FormControl(null, [Validators.required]),
-    });
+    this.form = Recipe.getForm();
+    this.ingredients = <FormArray>this.form.get('ingredients');
+    this.ingredientControls = <FormGroup[]>this.ingredients.controls;
     this.route.params.subscribe(this.onParams.bind(this));
   }
 
   onParams(params: Params) {
     if (params['id'] === undefined) {
-      this.recipe = null;
       return;
     }
     this.recipe = this.recipeService.getRecipe(+params['id']);
-    if (this.recipe === null) {
+    if (this.recipe instanceof Recipe) {
+      this.addRecipeToForm();
+    } else {
       this.router.navigate(['/recipes', 'new']);
-      return;
     }
-    this.form.reset({
-      name: this.recipe.name,
-      description: this.recipe.description,
-      imagePath: this.recipe.imagePath,
+  }
+
+  private addRecipeToForm() {
+    const { name, description, imagePath } = this.recipe;
+    this.form.reset({ name, description, imagePath });
+    this.recipe.ingredients.forEach((x, i) => {
+      this.ingredients.push(Ingredient.getForm());
+      this.ingredients.at(i).setValue({ name: x.name, amount: x.amount });
     });
   }
 
+  onAddIngredient() {
+    this.ingredients.push(Ingredient.getForm());
+  }
+
+  onDeleteIngredient(i: number) {
+    if (confirm('Delete ingredient?')) {
+      this.ingredients.removeAt(i);
+    }
+  }
+
   onSubmit() {
-    const { name, description, imagePath } = this.form.value;
-    const ingredients = this.recipe ? this.recipe.ingredients : [];
+    const { name, description, imagePath, ingredients: ing } = this.form.value;
+    const ingredients = ing.map(x => new Ingredient(x.name, x.amount));
     const newRecipe = new Recipe(name, description, imagePath, ingredients);
 
     const id = this.recipeService.addOrEditRecipe(this.recipe, newRecipe);
