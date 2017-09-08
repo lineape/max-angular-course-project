@@ -14,7 +14,6 @@ export class RecipeEditComponent implements OnInit {
   recipe: Recipe;
   form: FormGroup;
   ingredients: FormArray;
-  ingredientControls: FormGroup[];
 
   constructor(
     private route: ActivatedRoute,
@@ -24,9 +23,8 @@ export class RecipeEditComponent implements OnInit {
 
   ngOnInit() {
     this.form = Recipe.getForm();
-    this.ingredients = <FormArray>this.form.get('ingredients');
-    this.ingredientControls = <FormGroup[]>this.ingredients.controls;
-    this.route.params.subscribe(this.onParams.bind(this));
+    this.ingredients = this.form.get('ingredients') as FormArray;
+    this.route.params.subscribe((params: Params) => this.onParams(params));
   }
 
   onParams(params: Params) {
@@ -52,16 +50,17 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onDeleteIngredient(i: number) {
-    if (confirm('Delete ingredient?')) {
+    const name = this.ingredients.at(i).value;
+    const nameIsEmpty = (name || '').trim() === '';
+    if (nameIsEmpty || confirm(`Delete ingredient ${name}?`)) {
       this.ingredients.removeAt(i);
     }
   }
 
   onSubmit() {
     const { name, description, imagePath, ingredients: ing } = this.form.value;
-    const ingredients = ing.map(x => new Ingredient(x.name, x.amount));
-    const newRecipe = new Recipe(name, description, imagePath, ingredients);
-
+    const rIngredients = ing.map(x => new Ingredient(x.name, x.amount));
+    const newRecipe = new Recipe(name, description, imagePath, rIngredients);
     const id = this.recipeService.addOrEditRecipe(this.recipe, newRecipe);
     this.router.navigate(['/recipes', id]);
   }
