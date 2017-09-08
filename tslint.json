@@ -1,6 +1,7 @@
 {
   "extends": [
     "./tslint.dist.json",
+    "tslint-config-airbnb",
     "tslint-config-prettier"
   ]
 }
