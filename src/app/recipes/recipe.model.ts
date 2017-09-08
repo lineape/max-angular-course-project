@@ -8,6 +8,9 @@ export class Recipe {
     public imagePath: string,
     public ingredients: Ingredient[],
   ) {
+    this.name = name.trim();
+    this.description = description.trim();
+    this.imagePath = imagePath.trim();
     this.ingredients.sort(Ingredient.sortNameAsc);
   }
 
@@ -19,5 +22,14 @@ export class Recipe {
       imagePath: new FormControl(null, [required, minLength(5)]),
       ingredients: new FormArray([]),
     });
+  }
+
+  static fromJson(recipe): Recipe {
+    return new Recipe(
+      recipe.name,
+      recipe.description,
+      recipe.imagePath,
+      (recipe.ingredients || []).map(Ingredient.fromJson),
+    );
   }
 }

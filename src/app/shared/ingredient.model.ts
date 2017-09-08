@@ -20,6 +20,10 @@ export class Ingredient {
     });
   }
 
+  static fromJson(ingredient): Ingredient {
+    return new Ingredient(ingredient.name, ingredient.amount);
+  }
+
   combineAmountsWith(ingredient: Ingredient) {
     this.amount += ingredient.amount;
   }

@@ -7,6 +7,11 @@ export class ShoppingListService {
   selectedChanged = new Subject<Ingredient>();
   listChanged = new Subject<Ingredient[]>();
 
+  setList(list: Ingredient[]) {
+    this.list = list;
+    this.listChanged.next(this.getList());
+  }
+
   addIngredient(ingredient: Ingredient | Ingredient[]) {
     const ingredients = Array.isArray(ingredient) ? ingredient : [ingredient];
     ingredients.forEach(x => this.addIngredientToList(x));
@@ -19,8 +24,8 @@ export class ShoppingListService {
     this.addIngredient(newIngredient);
   }
 
-  addOrEditIngredient(oldIngredient: Ingredient, newIngredient: Ingredient){
-    if (oldIngredient instanceof Ingredient){
+  addOrEditIngredient(oldIngredient: Ingredient, newIngredient: Ingredient) {
+    if (oldIngredient instanceof Ingredient) {
       this.editIngredient(oldIngredient, newIngredient);
     } else {
       this.addIngredient(newIngredient);

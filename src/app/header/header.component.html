@@ -8,7 +8,10 @@
         <a routerLink="/recipes">Recipes</a>
       </li>
       <li routerLinkActive="active">
-        <a routerLink="/shopping-list">Shopping List</a>
+        <a routerLink="/shopping-list">
+          Shopping List
+          <span *ngIf="listSize > 0">({{listSize}})</span>
+        </a>
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
@@ -16,8 +19,8 @@
         <a class="dropdown-toggle">Manage <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li>
-            <a>Save Data</a>
-            <a>Fetch Data</a>
+            <a style="cursor: pointer" (click)="onSaveData()">Save Data</a>
+            <a style="cursor: pointer" (click)="onFetchData()">Fetch Data</a>
           </li>
         </ul>
       </li>
