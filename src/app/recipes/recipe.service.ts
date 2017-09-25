@@ -1,9 +1,10 @@
-import { Recipe } from './recipe.model';
 import { Subject } from 'rxjs/Subject';
 
+import { Recipe } from './recipe.model';
+
 export class RecipeService {
-  private list: Recipe[] = [];
   listChanged = new Subject<Recipe[]>();
+  private list: Recipe[] = [];
 
   setList(recipes: Recipe[]) {
     this.list = recipes;

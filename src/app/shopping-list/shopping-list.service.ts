@@ -1,11 +1,11 @@
-import { Ingredient } from '../shared/ingredient.model';
-import { EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
+import { Ingredient } from '../shared/ingredient.model';
+
 export class ShoppingListService {
-  private list: Ingredient[] = [];
-  selectedChanged = new Subject<Ingredient>();
   listChanged = new Subject<Ingredient[]>();
+  selectedChanged = new Subject<Ingredient>();
+  private list: Ingredient[] = [];
 
   setList(list: Ingredient[]) {
     this.list = list;
@@ -32,16 +32,6 @@ export class ShoppingListService {
     }
   }
 
-  private addIngredientToList(ingredient: Ingredient) {
-    const ingredientInList = this.list.find(x => x.name === ingredient.name);
-    if (ingredientInList) {
-      ingredientInList.combineAmountsWith(ingredient);
-    } else {
-      this.list.push(ingredient);
-      this.list.sort(Ingredient.sortNameAsc);
-    }
-  }
-
   getList(): Ingredient[] {
     return [...this.list];
   }
@@ -64,5 +54,15 @@ export class ShoppingListService {
       return true;
     }
     return false;
+  }
+
+  private addIngredientToList(ingredient: Ingredient) {
+    const ingredientInList = this.list.find(x => x.name === ingredient.name);
+    if (ingredientInList) {
+      ingredientInList.combineAmountsWith(ingredient);
+    } else {
+      this.list.push(ingredient);
+      this.list.sort(Ingredient.sortNameAsc);
+    }
   }
 }

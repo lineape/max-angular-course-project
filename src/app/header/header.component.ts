@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DataStorageService } from '../shared/data-storage.service';
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
-import { Subscription } from 'rxjs/Subscription';
 import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
+  templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   listSize = 0;

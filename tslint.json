@@ -1,7 +1,20 @@
 {
   "extends": [
     "./tslint.dist.json",
+    "tslint:latest",
     "tslint-config-airbnb",
+    "tslint-config-shopify",
     "tslint-config-prettier"
-  ]
+  ],
+  "rules": {
+    "object-literal-sort-keys": true,
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "case-insensitive",
+        "named-imports-order": "case-insensitive"
+      }
+    ],
+    "no-unused-variable": true
+  }
 }

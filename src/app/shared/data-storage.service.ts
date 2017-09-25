@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
 import { Recipe } from '../recipes/recipe.model';
-import { Ingredient } from './ingredient.model';
-import { Observable } from 'rxjs/Observable';
 import { RecipeService } from '../recipes/recipe.service';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { Ingredient } from './ingredient.model';
 
 @Injectable()
 export class DataStorageService {
@@ -21,8 +21,8 @@ export class DataStorageService {
     private shoppingListService: ShoppingListService,
   ) {}
 
-  fetchRecipes(): Observable<Recipe[]> {
-    return this.http
+  fetchRecipes = (): Observable<Recipe[]> =>
+    this.http
       .get(this.endpointRecipes)
       .map(resp => resp.json())
       .map(resp => (resp || []).map(Recipe.fromJson))
@@ -30,14 +30,12 @@ export class DataStorageService {
         this.recipeService.setList(recipes);
         return recipes;
       });
-  }
 
-  saveRecipes() {
-    return this.http.put(this.endpointRecipes, this.recipeService.getRecipes());
-  }
+  saveRecipes = () =>
+    this.http.put(this.endpointRecipes, this.recipeService.getRecipes());
 
-  fetchShoppingList(): Observable<Ingredient[]> {
-    return this.http
+  fetchShoppingList = (): Observable<Ingredient[]> =>
+    this.http
       .get(this.endpointShoppingList)
       .map(resp => resp.json())
       .map(resp => (resp || []).map(Ingredient.fromJson))
@@ -45,24 +43,24 @@ export class DataStorageService {
         this.shoppingListService.setList(shoppingList);
         return shoppingList;
       });
-  }
 
-  saveShoppingList() {
-    return this.http.put(
+  saveShoppingList = () =>
+    this.http.put(
       this.endpointShoppingList,
       this.shoppingListService.getList(),
     );
-  }
 
-  saveAll() {
-    return this.http.put(this.endpointAll, {
+  saveAll = () =>
+    this.http.put(this.endpointAll, {
       recipes: this.recipeService.getRecipes(),
       shoppingList: this.shoppingListService.getList(),
     });
-  }
 
-  fetchAll(): Observable<{ recipes: Recipe[]; shoppingList: Ingredient[] }> {
-    return this.http
+  fetchAll = (): Observable<{
+    recipes: Recipe[];
+    shoppingList: Ingredient[];
+  }> =>
+    this.http
       .get(this.endpointAll)
       .map(resp => resp.json())
       .map(resp => ({
@@ -74,5 +72,4 @@ export class DataStorageService {
         this.shoppingListService.setList(data.shoppingList);
         return data;
       });
-  }
 }

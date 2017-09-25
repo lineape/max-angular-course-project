@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+
+import { Ingredient } from '../../shared/ingredient.model';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
-import { Ingredient } from '../../shared/ingredient.model';
-import { FormArray, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-edit',
-  templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css'],
+  templateUrl: './recipe-edit.component.html',
 })
 export class RecipeEditComponent implements OnInit {
   recipe: Recipe;
@@ -39,7 +40,7 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
-  private addRecipeToForm() {
+  addRecipeToForm() {
     const { name, description, imagePath, ingredients } = this.recipe;
     this.form.reset({ name, description, imagePath });
     ingredients.forEach(x => this.ingredients.push(Ingredient.getForm(x)));

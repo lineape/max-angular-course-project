@@ -1,33 +1,38 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-shopping-list',
-  templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css'],
+  templateUrl: './shopping-list.component.html',
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
   list: Ingredient[] = [];
   selected: Ingredient = null;
-  private listSubscription: Subscription;
-  private selectedSubscription: Subscription;
+  private listSub: Subscription;
+  private selectedSub: Subscription;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit() {
     this.list = this.shoppingListService.getList();
-    this.listSubscription = this.shoppingListService.listChanged.subscribe(
-      (newList: Ingredient[]) => {
-        this.list = newList;
-      },
+    this.listSub = this.shoppingListService.listChanged.subscribe(
+      this.onListChanged.bind(this),
     );
-    this.selectedSubscription = this.shoppingListService.selectedChanged.subscribe(
-      (ingredient: Ingredient) => {
-        this.selected = ingredient;
-      },
+    this.selectedSub = this.shoppingListService.selectedChanged.subscribe(
+      this.onSelectedChanged.bind(this),
     );
+  }
+
+  onListChanged(newList: Ingredient[]) {
+    this.list = newList;
+  }
+
+  onSelectedChanged(ingredient: Ingredient) {
+    this.selected = ingredient;
   }
 
   onIngredientClick(ingredient: Ingredient) {
@@ -43,8 +48,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.listSubscription.unsubscribe();
-    this.selectedSubscription.unsubscribe();
+    this.listSub.unsubscribe();
+    this.selectedSub.unsubscribe();
     this.shoppingListService.selectedChanged.next(null);
   }
 }

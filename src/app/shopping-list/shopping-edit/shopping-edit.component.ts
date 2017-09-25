@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Ingredient } from '../../shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list.service';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
+import { Ingredient } from '../../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list.service';
+
 @Component({
   selector: 'app-shopping-edit',
-  templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css'],
+  templateUrl: './shopping-edit.component.html',
 })
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -32,7 +33,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  private resetForm() {
+  resetForm() {
     this.form.reset({ amount: 1 });
   }
 
