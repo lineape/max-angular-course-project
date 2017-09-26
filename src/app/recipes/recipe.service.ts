@@ -6,13 +6,13 @@ export class RecipeService {
   listChanged = new Subject<Recipe[]>();
   private list: Recipe[] = [];
 
-  getRecipes = (): Recipe[] => [...this.list];
+  getList = (): Recipe[] => [...this.list];
 
   getRecipe = (id: number): Recipe => (this.list[id] ? this.list[id] : null);
 
   setList = (recipes: Recipe[]) => {
     this.list = recipes;
-    this.listChanged.next(this.getRecipes());
+    this.listChanged.next(this.getList());
     return true;
   };
 

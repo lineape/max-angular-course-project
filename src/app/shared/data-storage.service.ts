@@ -32,7 +32,7 @@ export class DataStorageService {
       });
 
   saveRecipes = () =>
-    this.http.put(this.endpointRecipes, this.recipeService.getRecipes());
+    this.http.put(this.endpointRecipes, this.recipeService.getList());
 
   fetchShoppingList = (): Observable<Ingredient[]> =>
     this.http
@@ -52,7 +52,7 @@ export class DataStorageService {
 
   saveAll = () =>
     this.http.put(this.endpointAll, {
-      recipes: this.recipeService.getRecipes(),
+      recipes: this.recipeService.getList(),
       shoppingList: this.shoppingListService.getList(),
     });
 
