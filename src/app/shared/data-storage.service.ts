@@ -45,7 +45,10 @@ export class DataStorageService {
       });
 
   saveShoppingList = () =>
-    this.http.put(this.endpointShoppingList, this.shoppingListService.getList());
+    this.http.put(
+      this.endpointShoppingList,
+      this.shoppingListService.getList(),
+    );
 
   saveAll = () =>
     this.http.put(this.endpointAll, {

@@ -1,7 +1,6 @@
 {
   "extends": [
     "./tslint.dist.json",
-    "tslint:latest",
     "tslint-config-airbnb",
     "tslint-config-shopify",
     "tslint-config-prettier"

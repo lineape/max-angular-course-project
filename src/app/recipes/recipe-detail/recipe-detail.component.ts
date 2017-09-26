@@ -12,7 +12,7 @@ import { RecipeService } from '../recipe.service';
   templateUrl: './recipe-detail.component.html',
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
-  id: number = -1;
+  id = -1;
   recipe: Recipe = null;
   recipeSub: Subscription = null;
 
@@ -39,9 +39,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipe = this.recipeService.getRecipe(this.id);
   };
 
-  onRecipesChanged = () => {
-    this.recipe = this.recipeService.getRecipe(this.id);
-  };
+  onRecipesChanged = () =>
+    (this.recipe = this.recipeService.getRecipe(this.id));
 
   onAddToList() {
     this.shoppingListService.addIngredients(this.recipe.ingredients);
