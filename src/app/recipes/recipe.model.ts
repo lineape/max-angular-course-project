@@ -12,14 +12,18 @@ export class Recipe {
     });
   }
 
-  static fromJson(recipe): Recipe {
-    return new Recipe(
-      recipe.name,
-      recipe.description,
-      recipe.imagePath,
-      (recipe.ingredients || []).map(Ingredient.fromJson),
+  static fromJson = ({
+    name,
+    description,
+    imagePath,
+    ingredients = [],
+  }): Recipe =>
+    new Recipe(
+      name,
+      description,
+      imagePath,
+      ingredients.map(Ingredient.fromJson),
     );
-  }
 
   constructor(
     public name: string,
@@ -30,6 +34,6 @@ export class Recipe {
     this.name = name.trim();
     this.description = description.trim();
     this.imagePath = imagePath.trim();
-    this.ingredients.sort(Ingredient.sortNameAsc);
+    this.ingredients.sort(Ingredient.sortNameComparator);
   }
 }

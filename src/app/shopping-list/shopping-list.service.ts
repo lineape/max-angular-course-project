@@ -3,66 +3,58 @@ import { Subject } from 'rxjs/Subject';
 import { Ingredient } from '../shared/ingredient.model';
 
 export class ShoppingListService {
+  private static _addIngredientsToList(
+    list: Ingredient[],
+    ingredientsToAdd: Ingredient[],
+  ): Ingredient[] {
+    ingredientsToAdd.forEach((ingredient: Ingredient) => {
+      const listIndex = list.findIndex(x => x.name === ingredient.name);
+      return listIndex > -1
+        ? list[listIndex].addAmountFrom(ingredient)
+        : list.push(ingredient);
+    });
+    return list.sort(Ingredient.sortNameComparator);
+  }
+
   listChanged = new Subject<Ingredient[]>();
   selectedChanged = new Subject<Ingredient>();
+
   private list: Ingredient[] = [];
 
-  setList(list: Ingredient[]) {
-    this.list = list;
+  getList = (): Ingredient[] => [...this.list];
+
+  setList(newList: Ingredient[]): boolean {
+    this.list = [...newList].filter(x => x.amount > 0);
+    this.selectedChanged.next(null);
     this.listChanged.next(this.getList());
+
+    return true;
   }
 
-  addIngredient(ingredient: Ingredient | Ingredient[]) {
-    const ingredients = Array.isArray(ingredient) ? ingredient : [ingredient];
-    ingredients.forEach(x => this.addIngredientToList(x));
-    this.list = this.list.filter(x => x.amount > 0);
-    this.listChanged.next(this.getList());
-  }
+  addOrEditIngredient = (oldIng: Ingredient, newIng: Ingredient) =>
+    oldIng instanceof Ingredient
+      ? this.editIngredient(oldIng, newIng)
+      : this.addIngredient(newIng);
 
-  editIngredient(oldIngredient: Ingredient, newIngredient: Ingredient) {
-    this.list = this.list.filter(x => x.name !== oldIngredient.name);
-    this.addIngredient(newIngredient);
-  }
+  editIngredient = (oldIng: Ingredient, newIng: Ingredient): boolean =>
+    this._deleteIngredient(oldIng) && this.addIngredient(newIng);
 
-  addOrEditIngredient(oldIngredient: Ingredient, newIngredient: Ingredient) {
-    if (oldIngredient instanceof Ingredient) {
-      this.editIngredient(oldIngredient, newIngredient);
-    } else {
-      this.addIngredient(newIngredient);
-    }
-  }
+  addIngredient = (ingredient: Ingredient): boolean =>
+    this.addIngredients([ingredient]);
 
-  getList(): Ingredient[] {
-    return [...this.list];
-  }
+  addIngredients = (ingredients: Ingredient[]): boolean =>
+    this.setList(
+      ShoppingListService._addIngredientsToList([...this.list], ingredients),
+    );
 
-  deleteList(): boolean {
-    if (confirm('Sure you want to clear the list? This cannot be undone')) {
-      this.selectedChanged.next(null);
-      this.list = [];
-      this.listChanged.next(this.getList());
-      return true;
-    }
-    return false;
-  }
+  deleteList = (): boolean =>
+    confirm('Sure you want to delete the list? This cannot be undone') &&
+    this.setList([]);
 
-  deleteIngredient(ingredient: Ingredient): boolean {
-    if (confirm(`Sure you want to delete ${ingredient.name}?`)) {
-      this.selectedChanged.next(null);
-      this.list = this.list.filter(x => x.name !== ingredient.name);
-      this.listChanged.next(this.getList());
-      return true;
-    }
-    return false;
-  }
+  deleteIngredient = (ingredient: Ingredient): boolean =>
+    confirm(`Sure you want to delete ${ingredient.name}?`) &&
+    this._deleteIngredient(ingredient);
 
-  private addIngredientToList(ingredient: Ingredient) {
-    const ingredientInList = this.list.find(x => x.name === ingredient.name);
-    if (ingredientInList) {
-      ingredientInList.combineAmountsWith(ingredient);
-    } else {
-      this.list.push(ingredient);
-      this.list.sort(Ingredient.sortNameAsc);
-    }
-  }
+  private _deleteIngredient = (ingredient: Ingredient): boolean =>
+    this.setList(this.list.filter(x => x !== ingredient));
 }

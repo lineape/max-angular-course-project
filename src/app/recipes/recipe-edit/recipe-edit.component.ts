@@ -46,9 +46,7 @@ export class RecipeEditComponent implements OnInit {
     ingredients.forEach(x => this.ingredients.push(Ingredient.getForm(x)));
   }
 
-  onAddIngredient() {
-    this.ingredients.push(Ingredient.getForm());
-  }
+  onAddIngredient = () => this.ingredients.push(Ingredient.getForm());
 
   onDeleteIngredient(i: number) {
     const name = this.ingredients.at(i).value;

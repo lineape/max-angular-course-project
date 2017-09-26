@@ -20,31 +20,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.list = this.shoppingListService.getList();
     this.listSub = this.shoppingListService.listChanged.subscribe(
-      this.onListChanged.bind(this),
+      this.onListChanged,
     );
     this.selectedSub = this.shoppingListService.selectedChanged.subscribe(
-      this.onSelectedChanged.bind(this),
+      this.onSelectedChanged,
     );
-  }
-
-  onListChanged(newList: Ingredient[]) {
-    this.list = newList;
-  }
-
-  onSelectedChanged(ingredient: Ingredient) {
-    this.selected = ingredient;
-  }
-
-  onIngredientClick(ingredient: Ingredient) {
-    if (this.selected === ingredient) {
-      this.shoppingListService.selectedChanged.next(null);
-    } else {
-      this.shoppingListService.selectedChanged.next(ingredient);
-    }
-  }
-
-  onDeleteList() {
-    this.shoppingListService.deleteList();
   }
 
   ngOnDestroy() {
@@ -52,4 +32,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.selectedSub.unsubscribe();
     this.shoppingListService.selectedChanged.next(null);
   }
+
+  onListChanged = (newList: Ingredient[]) => (this.list = newList);
+
+  onSelectedChanged = (ingredient: Ingredient) => (this.selected = ingredient);
+
+  onIngredientClick = (ingredient: Ingredient) =>
+    this.selected === ingredient
+      ? this.shoppingListService.selectedChanged.next(null)
+      : this.shoppingListService.selectedChanged.next(ingredient);
+
+  onDeleteList = () => this.shoppingListService.deleteList();
 }

@@ -15,6 +15,9 @@
         "named-imports-order": "case-insensitive"
       }
     ],
-    "no-unused-variable": true
+    "no-unused-variable": true,
+    "trailing-comma-interface": false,
+    "function-name": ["allow-leading-underscore"],
+    "variable-name": ["allow-leading-underscore"]
   }
 }

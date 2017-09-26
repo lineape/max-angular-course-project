@@ -11,20 +11,18 @@ import { RecipeService } from '../recipe.service';
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[] = [];
-  private listSubscription: Subscription;
+  private listSub: Subscription;
 
   constructor(private recipeService: RecipeService) {}
 
   ngOnInit() {
     this.recipes = this.recipeService.getRecipes();
-    this.listSubscription = this.recipeService.listChanged.subscribe(
-      (newList: Recipe[]) => {
-        this.recipes = newList;
-      },
-    );
+    this.listSub = this.recipeService.listChanged.subscribe(this.onListChanged);
   }
 
   ngOnDestroy() {
-    this.listSubscription.unsubscribe();
+    this.listSub.unsubscribe();
   }
+
+  onListChanged = (list: Recipe[]) => (this.recipes = list);
 }

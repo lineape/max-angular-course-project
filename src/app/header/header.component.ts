@@ -12,7 +12,7 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   listSize = 0;
-  listSubscription: Subscription;
+  listSub: Subscription;
   constructor(
     private dataService: DataStorageService,
     private shoppingListService: ShoppingListService,
@@ -20,22 +20,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.listSize = this.shoppingListService.getList().length;
-    this.listSubscription = this.shoppingListService.listChanged.subscribe(
-      (list: Ingredient[]) => {
-        this.listSize = list.length;
-      },
+    this.listSub = this.shoppingListService.listChanged.subscribe(
+      this.onListChange,
     );
   }
 
   ngOnDestroy() {
-    this.listSubscription.unsubscribe();
+    this.listSub.unsubscribe();
   }
 
-  onSaveData() {
-    this.dataService.saveAll().subscribe();
-  }
+  onListChange = (list: Ingredient[]) => (this.listSize = list.length);
 
-  onFetchData() {
-    this.dataService.fetchAll().subscribe();
-  }
+  onSaveData = () => this.dataService.saveAll().subscribe();
+
+  onFetchData = () => this.dataService.fetchAll().subscribe();
 }

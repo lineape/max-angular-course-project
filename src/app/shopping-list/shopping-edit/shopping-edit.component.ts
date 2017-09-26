@@ -20,40 +20,33 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.form = Ingredient.getForm();
     this.selectedSubscription = this.shoppingListService.selectedChanged.subscribe(
-      this.onSelectedChanged.bind(this),
+      this.onSelectedChanged,
     );
-  }
-
-  onSelectedChanged(ingredient: Ingredient) {
-    this.selected = ingredient;
-    if (this.selected) {
-      this.form.reset({ name: ingredient.name, amount: ingredient.amount });
-    } else {
-      this.resetForm();
-    }
-  }
-
-  resetForm() {
-    this.form.reset({ amount: 1 });
-  }
-
-  onSubmit() {
-    const { name, amount } = this.form.value;
-    const newIngredient = new Ingredient(name, amount);
-    this.shoppingListService.addOrEditIngredient(this.selected, newIngredient);
-    this.resetForm();
-  }
-
-  onDelete() {
-    this.shoppingListService.deleteIngredient(this.selected);
-    this.resetForm();
-  }
-
-  onClear() {
-    this.resetForm();
   }
 
   ngOnDestroy() {
     this.selectedSubscription.unsubscribe();
   }
+
+  onSelectedChanged = (ingredient: Ingredient) => {
+    this.selected = ingredient;
+    if (this.selected) {
+      this.form.reset({ name: ingredient.name, amount: ingredient.amount });
+    } else {
+      this._resetForm();
+    }
+  };
+
+  onSubmit() {
+    const { name, amount } = this.form.value;
+    const newIngredient = new Ingredient(name, amount);
+    this.shoppingListService.addOrEditIngredient(this.selected, newIngredient);
+    this._resetForm();
+  }
+
+  onDelete = () =>
+    this.shoppingListService.deleteIngredient(this.selected) &&
+    this._resetForm();
+
+  private _resetForm = () => this.form.reset({ amount: 1 });
 }

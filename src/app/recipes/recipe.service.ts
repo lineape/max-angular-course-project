@@ -6,46 +6,35 @@ export class RecipeService {
   listChanged = new Subject<Recipe[]>();
   private list: Recipe[] = [];
 
-  setList(recipes: Recipe[]) {
+  getRecipes = (): Recipe[] => [...this.list];
+
+  getRecipe = (id: number): Recipe => (this.list[id] ? this.list[id] : null);
+
+  setList = (recipes: Recipe[]) => {
     this.list = recipes;
     this.listChanged.next(this.getRecipes());
-  }
+    return true;
+  };
 
-  addRecipe(recipe: Recipe): number {
-    this.list.push(recipe);
-    this.listChanged.next(this.getRecipes());
-    return this.list.length - 1;
-  }
+  addOrEditRecipe = (oldRecipe: Recipe, newRecipe: Recipe): number =>
+    oldRecipe instanceof Recipe
+      ? this.editRecipe(oldRecipe, newRecipe)
+      : this.addRecipe(newRecipe);
 
   editRecipe(oldRecipe: Recipe, newRecipe: Recipe): number {
-    const index = this.list.findIndex(x => x.name === oldRecipe.name);
-    this.list[index] = newRecipe;
-    this.listChanged.next(this.getRecipes());
-    return index;
+    const recipeIndex = this.list.findIndex(x => x.name === oldRecipe.name);
+    this.setList([
+      ...this.list.slice(0, recipeIndex),
+      newRecipe,
+      ...this.list.slice(recipeIndex + 1),
+    ]);
+    return recipeIndex;
   }
 
-  addOrEditRecipe(oldRecipe: Recipe, newRecipe: Recipe): number {
-    if (oldRecipe instanceof Recipe) {
-      return this.editRecipe(oldRecipe, newRecipe);
-    } else {
-      return this.addRecipe(newRecipe);
-    }
-  }
+  addRecipe = (recipe: Recipe): number =>
+    this.setList(this.list.concat(recipe)) && this.list.length - 1;
 
-  deleteRecipe(recipe: Recipe): boolean {
-    if (confirm('You sure you want to delete it?')) {
-      this.list = this.list.filter(x => x.name !== recipe.name);
-      this.listChanged.next(this.getRecipes());
-      return true;
-    }
-    return false;
-  }
-
-  getRecipes(): Recipe[] {
-    return [...this.list];
-  }
-
-  getRecipe(id: number): Recipe {
-    return this.list[id] ? this.list[id] : null;
-  }
+  deleteRecipe = (recipe: Recipe): boolean =>
+    confirm(`You sure you want to delete ${recipe.name}?`) &&
+    this.setList(this.list.filter(x => x.name !== recipe.name));
 }
