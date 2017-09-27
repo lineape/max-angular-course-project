@@ -13,12 +13,12 @@ import { RecipeService } from '../recipe.service';
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
   id = -1;
-  recipe: Recipe = null;
-  recipeSub: Subscription = null;
+  recipe: Recipe;
+  private recipeSub: Subscription;
 
   constructor(
     private recipeService: RecipeService,
-    private shoppingListService: ShoppingListService,
+    private slService: ShoppingListService,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -34,16 +34,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeSub.unsubscribe();
   }
 
-  onParams = (params: Params) => {
-    this.id = +params['id'];
-    this.recipe = this.recipeService.getRecipe(this.id);
-  };
-
-  onRecipesChanged = () =>
-    (this.recipe = this.recipeService.getRecipe(this.id));
-
   onAddToList() {
-    this.shoppingListService.addIngredients(this.recipe.ingredients);
+    this.slService.addIngredients(this.recipe.ingredients);
     this.router.navigate(['shopping-list']);
   }
 
@@ -53,4 +45,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/recipes']);
     }
   }
+
+  private onParams = (params: Params) => {
+    this.id = +params['id'];
+    this.recipe = this.recipeService.getRecipe(this.id);
+  };
+
+  private onRecipesChanged = () =>
+    (this.recipe = this.recipeService.getRecipe(this.id));
 }

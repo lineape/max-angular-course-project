@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+    <h3>Register for an account</h3>
+    <p>Already have an account? <a routerLink="/auth/signin">Sign in!</a></p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input
+          placeholder="YourEmail@gmail.com"
+          class="form-control"
+          id="signup-email"
+          type="email"
+          formControlName="email"
+        >
+      </div>
+      <div class="form-group" [formGroup]="form.get('passwords')">
+        <div class="form-group">
+          <label for="signup-password1">Password</label>
+          <input
+            placeholder="Enter a password (8+ characters long)"
+            class="form-control"
+            id="signup-password1"
+            type="password"
+            formControlName="password1"
+          >
+        </div>
+        <div class="form-group">
+          <label for="signup-password2">Confirm Password</label>
+          <input
+            placeholder="Re-enter the password from above"
+            class="form-control"
+            id="signup-password2"
+            type="password"
+            formControlName="password2"
+          >
+        </div>
+      </div>
+
+      <button class="bin btn-primary" [disabled]="form.invalid">Sign up</button>
+    </form>
+  </div>
+</div>

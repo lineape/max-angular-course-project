@@ -1,10 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-interface FormIngredient {
-  name?: string;
-  amount: number;
-}
-
 export class Ingredient {
   static sortNameComparator = (a: Ingredient, b: Ingredient) =>
     a.name.localeCompare(b.name, 'en-us');
@@ -12,7 +7,12 @@ export class Ingredient {
   static fromJson = ({ name, amount }): Ingredient =>
     new Ingredient(name, amount);
 
-  static getForm = (ingredient: FormIngredient = { name: null, amount: 1 }) =>
+  static getForm = (
+    ingredient: {
+      name?: string;
+      amount: number;
+    } = { name: null, amount: 1 },
+  ) =>
     new FormGroup({
       amount: new FormControl(ingredient.amount, [
         Validators.required,

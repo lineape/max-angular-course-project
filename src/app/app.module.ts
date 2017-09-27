@@ -5,6 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthService } from './auth/auth.service';
+import { SigninComponent } from './auth/signin/signin.component';
+import { SignupComponent } from './auth/signup/signup.component';
 import { HeaderComponent } from './header/header.component';
 import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
@@ -33,8 +36,15 @@ import { ShoppingListService } from './shopping-list/shopping-list.service';
     DropdownDirective,
     RecipeEditComponent,
     RecipeStartComponent,
+    SignupComponent,
+    SigninComponent,
   ],
   imports: [AppRoutingModule, BrowserModule, HttpModule, ReactiveFormsModule],
-  providers: [DataStorageService, RecipeService, ShoppingListService],
+  providers: [
+    AuthService,
+    DataStorageService,
+    RecipeService,
+    ShoppingListService,
+  ],
 })
 export class AppModule {}

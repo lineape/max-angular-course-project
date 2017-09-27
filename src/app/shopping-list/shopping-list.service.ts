@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { Ingredient } from '../shared/ingredient.model';
 
 export class ShoppingListService {
-  private static _addIngredientsToList(
+  private static addIngredientsToList(
     list: Ingredient[],
     ingredientsToAdd: Ingredient[],
   ): Ingredient[] {
@@ -37,14 +37,14 @@ export class ShoppingListService {
       : this.addIngredient(newIng);
 
   editIngredient = (oldIng: Ingredient, newIng: Ingredient): boolean =>
-    this._deleteIngredient(oldIng) && this.addIngredient(newIng);
+    this.removeIngredientFromList(oldIng) && this.addIngredient(newIng);
 
   addIngredient = (ingredient: Ingredient): boolean =>
     this.addIngredients([ingredient]);
 
   addIngredients = (ingredients: Ingredient[]): boolean =>
     this.setList(
-      ShoppingListService._addIngredientsToList([...this.list], ingredients),
+      ShoppingListService.addIngredientsToList([...this.list], ingredients),
     );
 
   deleteList = (): boolean =>
@@ -53,8 +53,8 @@ export class ShoppingListService {
 
   deleteIngredient = (ingredient: Ingredient): boolean =>
     confirm(`Sure you want to delete ${ingredient.name}?`) &&
-    this._deleteIngredient(ingredient);
+    this.removeIngredientFromList(ingredient);
 
-  private _deleteIngredient = (ingredient: Ingredient): boolean =>
+  private removeIngredientFromList = (ingredient: Ingredient): boolean =>
     this.setList(this.list.filter(x => x !== ingredient));
 }

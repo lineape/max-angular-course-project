@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
+import { AuthService } from '../auth/auth.service';
 import { DataStorageService } from '../shared/data-storage.service';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
@@ -12,26 +13,39 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   listSize = 0;
-  listSub: Subscription;
+  isAuthenticated: boolean;
+  private listSub: Subscription;
+  private authSub: Subscription;
+
   constructor(
     private dataService: DataStorageService,
-    private shoppingListService: ShoppingListService,
+    private slService: ShoppingListService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
-    this.listSize = this.shoppingListService.getList().length;
-    this.listSub = this.shoppingListService.listChanged.subscribe(
-      this.onListChange,
-    );
+    this.listSize = this.slService.getList().length;
+    this.listSub = this.slService.listChanged.subscribe(this.onListChange);
+    this.authSub = this.authService.authChanged.subscribe(this.onAuthChange);
   }
 
   ngOnDestroy() {
     this.listSub.unsubscribe();
+    this.authSub.unsubscribe();
   }
 
-  onListChange = (list: Ingredient[]) => (this.listSize = list.length);
+  onSaveData = async () =>
+    this.dataService.saveRecipes(await this.authService.getToken()).subscribe();
 
-  onSaveData = () => this.dataService.saveAll().subscribe();
+  onFetchData = async () =>
+    this.dataService
+      .fetchRecipes(await this.authService.getToken())
+      .subscribe();
 
-  onFetchData = () => this.dataService.fetchAll().subscribe();
+  onSignout = () => this.authService.signOut();
+
+  private onListChange = (list: Ingredient[]) => (this.listSize = list.length);
+
+  private onAuthChange = (user: firebase.User) =>
+    (this.isAuthenticated = !!user);
 }

@@ -15,32 +15,31 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private listSub: Subscription;
   private selectedSub: Subscription;
 
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(private slService: ShoppingListService) {}
 
   ngOnInit() {
-    this.list = this.shoppingListService.getList();
-    this.listSub = this.shoppingListService.listChanged.subscribe(
-      this.onListChanged,
-    );
-    this.selectedSub = this.shoppingListService.selectedChanged.subscribe(
-      this.onSelectedChanged,
+    this.list = this.slService.getList();
+    this.listSub = this.slService.listChanged.subscribe(this.onListChange);
+    this.selectedSub = this.slService.selectedChanged.subscribe(
+      this.onSelectedChange,
     );
   }
 
   ngOnDestroy() {
     this.listSub.unsubscribe();
     this.selectedSub.unsubscribe();
-    this.shoppingListService.selectedChanged.next(null);
+    this.slService.selectedChanged.next(null);
   }
-
-  onListChanged = (newList: Ingredient[]) => (this.list = newList);
-
-  onSelectedChanged = (ingredient: Ingredient) => (this.selected = ingredient);
 
   onIngredientClick = (ingredient: Ingredient) =>
     this.selected === ingredient
-      ? this.shoppingListService.selectedChanged.next(null)
-      : this.shoppingListService.selectedChanged.next(ingredient);
+      ? this.slService.selectedChanged.next(null)
+      : this.slService.selectedChanged.next(ingredient);
 
-  onDeleteList = () => this.shoppingListService.deleteList();
+  onDeleteList = () => this.slService.deleteList();
+
+  private onListChange = (newList: Ingredient[]) => (this.list = newList);
+
+  private onSelectedChange = (ingredient: Ingredient) =>
+    (this.selected = ingredient);
 }

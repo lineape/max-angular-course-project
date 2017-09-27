@@ -36,5 +36,8 @@ export class RecipeService {
 
   deleteRecipe = (recipe: Recipe): boolean =>
     confirm(`You sure you want to delete ${recipe.name}?`) &&
+    this.removeRecipeFromList(recipe);
+
+  private removeRecipeFromList = (recipe: Recipe): boolean =>
     this.setList(this.list.filter(x => x.name !== recipe.name));
 }

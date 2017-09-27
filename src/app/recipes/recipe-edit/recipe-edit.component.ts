@@ -25,19 +25,7 @@ export class RecipeEditComponent implements OnInit {
   ngOnInit() {
     this.form = Recipe.getForm();
     this.ingredients = this.form.get('ingredients') as FormArray;
-    this.route.params.subscribe((params: Params) => this.onParams(params));
-  }
-
-  onParams(params: Params) {
-    if (params['id'] === undefined) {
-      return;
-    }
-    this.recipe = this.recipeService.getRecipe(+params['id']);
-    if (this.recipe instanceof Recipe) {
-      this.addRecipeToForm();
-    } else {
-      this.router.navigate(['/recipes', 'new']);
-    }
+    this.route.params.subscribe(this.onParams);
   }
 
   addRecipeToForm() {
@@ -64,10 +52,22 @@ export class RecipeEditComponent implements OnInit {
     this.router.navigate(['/recipes', id]);
   }
 
-  deleteRecipe() {
+  onDeleteRecipe() {
     const recipeWasDeleted = this.recipeService.deleteRecipe(this.recipe);
     if (recipeWasDeleted) {
       this.router.navigate(['/recipes']);
     }
   }
+
+  private onParams = (params: Params) => {
+    if (params['id'] === undefined) {
+      return;
+    }
+    this.recipe = this.recipeService.getRecipe(+params['id']);
+    if (this.recipe instanceof Recipe) {
+      this.addRecipeToForm();
+    } else {
+      this.router.navigate(['/recipes', 'new']);
+    }
+  };
 }
