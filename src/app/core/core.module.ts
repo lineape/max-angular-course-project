@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -12,7 +13,7 @@ import { HomeComponent } from './home/home.component';
 @NgModule({
   declarations: [HeaderComponent, HomeComponent],
   exports: [HeaderComponent],
-  imports: [RouterModule, SharedModule],
+  imports: [RouterModule, SharedModule, HttpModule],
   providers: [
     AuthService,
     DataStorageService,
