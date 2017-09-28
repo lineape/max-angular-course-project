@@ -5,7 +5,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-aot": "ng serve --aot",
     "build": "ng build",
+    "build-prod": "ng build --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -25,9 +27,6 @@
     "core-js": "^2.5.1",
     "firebase": "^4.4.0",
     "rxjs": "^5.4.2",
-    "tslint-config-airbnb": "^5.3.0",
-    "tslint-config-prettier": "^1.5.0",
-    "tslint-config-shopify": "^3.0.1",
     "zone.js": "^0.8.17"
   },
   "devDependencies": {
@@ -49,6 +48,9 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.3.0",
     "tslint": "~5.7.0",
+    "tslint-config-airbnb": "^5.3.0",
+    "tslint-config-prettier": "^1.5.0",
+    "tslint-config-shopify": "^3.0.1",
     "typescript": "~2.3.4"
   }
 }
