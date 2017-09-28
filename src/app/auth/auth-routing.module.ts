@@ -9,12 +9,12 @@ const routes: Routes = [
   {
     canActivate: [NotAuthGuard],
     component: SigninComponent,
-    path: 'auth/signin',
+    path: 'signin',
   },
   {
     canActivate: [NotAuthGuard],
     component: SignupComponent,
-    path: 'auth/signup',
+    path: 'signup',
   },
 ];
 

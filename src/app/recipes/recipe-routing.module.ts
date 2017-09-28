@@ -13,7 +13,6 @@ const routes: Routes = [
       {
         component: RecipeStartComponent,
         path: '',
-        pathMatch: 'full',
       },
       {
         canActivate: [AuthGuard],
@@ -30,7 +29,7 @@ const routes: Routes = [
       },
     ],
     component: RecipesComponent,
-    path: 'recipes',
+    path: '',
   },
 ];
 

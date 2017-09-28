@@ -25,5 +25,5 @@ export class SigninComponent implements OnInit {
   onSubmit = () =>
     this.authService
       .signIn(this.form.value.email.trim(), this.form.value.password.trim())
-      .catch(e => console.log(e));
+      .catch(e => console.error(e));
 }
